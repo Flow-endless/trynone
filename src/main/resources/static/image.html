@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>图片分析 · AI 多模态智能分析平台</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233b82f6'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-size='14' font-family='system-ui'%3EAI%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="./css/image-analysis.css" />
+    <link rel="stylesheet" href="./css/mm-cross-nav.css" />
+  </head>
+  <body class="ia-body">
+    <div id="app" class="ia-layout">
+      <aside class="ia-sidebar">
+        <div class="ia-brand">
+          <div class="ia-brand-icon"><i class="fa-solid fa-image"></i></div>
+          <div>
+            <h2>图片分析</h2>
+            <p>上传 · 检测 · OCR</p>
+          </div>
+        </div>
+
+        <nav class="mm-cross-nav" aria-label="功能模块">
+          <span class="mm-cross-nav__title">模块切换</span>
+          <div class="mm-cross-nav__links">
+            <a href="./index.html" class="mm-cross-nav__link">首页</a>
+            <a href="./text.html" class="mm-cross-nav__link">文本</a>
+            <a href="./image.html" class="mm-cross-nav__link" aria-current="page">图片</a>
+            <a href="./audio.html" class="mm-cross-nav__link">音频</a>
+            <a href="./video.html" class="mm-cross-nav__link">视频</a>
+            <a href="./history.html" class="mm-cross-nav__link">历史</a>
+          </div>
+        </nav>
+
+        <div class="ia-section-title">上传图片</div>
+        <div id="ia-dropzone" class="ia-dropzone">
+          <input id="ia-file-input" type="file" accept="image/*" />
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <p>拖拽图片到此处，或点击选择</p>
+          <p class="ia-hint">支持 PNG、JPG、WebP 等常见格式</p>
+        </div>
+        <p id="ia-file-meta" class="ia-file-meta" hidden></p>
+
+        <div class="ia-section-title">分析模式</div>
+        <div class="ia-modes">
+          <label class="ia-mode ia-mode--selected">
+            <input type="radio" name="ia-mode" value="yolo" checked />
+            <div>
+              <strong><i class="fa-solid fa-bullseye"></i> YOLO 目标检测</strong>
+              <span>识别物体、人物、车辆等边界框与类别</span>
+            </div>
+          </label>
+          <label class="ia-mode">
+            <input type="radio" name="ia-mode" value="ocr" />
+            <div>
+              <strong><i class="fa-solid fa-font"></i> OCR 文字提取</strong>
+              <span>从图片中提取印刷体 / 手写文字内容</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="ia-actions">
+          <button id="ia-btn-analyze" type="button" class="ia-btn ia-btn-primary" disabled>
+            <i class="fa-solid fa-bolt"></i> 开始分析
+          </button>
+          <button id="ia-btn-clear" type="button" class="ia-btn ia-btn-ghost">
+            <i class="fa-solid fa-rotate-left"></i> 清空
+          </button>
+        </div>
+      </aside>
+
+      <main class="ia-main">
+        <header class="ia-header">
+          <div class="ia-header-titles">
+            <h1>图像智能分析</h1>
+            <p class="ia-header-hint">上传后选择模式并分析；OCR 适合文档与招牌，YOLO 适合人/车等常见物体。</p>
+          </div>
+          <span id="ia-badge-mode" class="ia-header-badge">YOLO 目标检测</span>
+        </header>
+
+        <div class="ia-content">
+          <section class="ia-panel">
+            <div class="ia-panel-head"><i class="fa-solid fa-eye"></i> 预览</div>
+            <div id="ia-preview-body" class="ia-panel-body"></div>
+          </section>
+          <section class="ia-panel">
+            <div class="ia-panel-head"><i class="fa-solid fa-list-check"></i> 识别结果</div>
+            <div id="ia-result-body" class="ia-panel-body"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script src="./js/mm-api-base.js"></script>
+    <script src="./js/mm-history.js"></script>
+    <script src="./js/image-analysis.js"></script>
+  </body>
+</html>

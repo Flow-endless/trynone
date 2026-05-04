@@ -1,0 +1,96 @@
+server:
+  port: 8081
+  # 大图 OCR / 长耗时推理时避免连接被过早掐断；multipart 与 Tomcat 上限需一致
+  # 须 >= VideoController 单文件上限（300MB），否则超限会在解析阶段被掐断，浏览器表现为 ERR_CONNECTION_RESET
+  tomcat:
+    connection-timeout: 600000
+    max-http-form-post-size: 320MB
+    max-swallow-size: 320MB
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 300MB
+      max-request-size: 320MB
+  # 避免浏览器/Electron 长期缓存 image.html、*.js；未设 no-store 时仍可能「像没更新」
+  resources:
+    cache:
+      cachecontrol:
+        no-store: true
+        no-cache: true
+        must-revalidate: true
+        max-age: 0
+
+# DeepSeek API 官方标准配置
+deepseek:
+  api:
+    # 本地可用环境变量 DEEPSEEK_API_KEY；云上在平台控制台配置同名变量即可
+    key: ${DEEPSEEK_API_KEY:}
+    base-url: https://api.deepseek.com
+    # 完整接口地址 = base-url + /chat/completions
+    url: https://api.deepseek.com/chat/completions
+    model: deepseek-chat
+  chat:
+    # 约束助手身份：不自称 DeepSeek、不暴露底层供应商（仍通过上方 api 调用模型）
+    system-prompt: >-
+      你是「AI 多模态智能分析平台」的助手。默认使用简体中文回复（除非用户明确要求其他语言）。
+      不要自称 DeepSeek，不要提及底层大模型厂商、模型代号或 API 名称；直接回答问题，语气专业、简洁、友好。
+
+# 多模态模型桥接配置（图片）
+multimodal:
+  vision:
+    python-cmd: d:/IDEAfiles/deepseek/.venv/Scripts/python.exe
+    script-path: scripts/vision_infer.py
+    # 默认 COCO 预训练（yolov8n）；后续若上 YOLO-World 可改为 yolov8s-worldv2.pt 并安装 clip
+    yolo-model: yolov8n.pt
+    yolo-imgsz: 640
+    # 与 ultralytics 8.4.x 发布资源一致；若换版本可改
+    yolo-assets-tag: v8.4.0
+    # 单次镜像下载 HTTP 超时（秒）
+    yolo-download-timeout-seconds: 300
+    ocr-lang: ch
+    # OCR：优先 RapidOCR+ONNX（Windows 无需 PyTorch/Paddle，避免 shm.dll 等问题）
+    # auto=先 rapid 再 paddle；paddle=仅 PaddleOCR（需 paddle 与 torch 环境正常）
+    ocr-backend: rapid
+    # YOLO 置信度阈值（0~1），略低可提高召回；过小会产生更多误检
+    yolo-confidence: 0.18
+    # 含首次下载权重，建议给足时间
+    infer-timeout-seconds: 600
+    # 关闭后：必须走真实模型；开启后：模型异常会回退到启发式结果
+    use-heuristic-fallback: false
+    # OCR：是否调用 DeepSeek 做中文相关后处理（需配置 deepseek.api.key）
+    # - 外语为主：全文译中文 → textZh
+    # - 中文为主但含外文（英/日/韩/西里尔等）：外文片段释义 → textForeignZh（另区块；textEnglishZh 同值兼容）
+    ocr-translate-enabled: true
+  audio:
+    # 与 vision 共用 venv 即可；未单独配置时沿用 multimodal.vision.python-cmd
+    python-cmd: d:/IDEAfiles/deepseek/.venv/Scripts/python.exe
+    script-path: scripts/audio_transcribe.py
+    whisper-model: tiny
+    # Whisper 对中文常出繁体；开启后转写结果经 OpenCC 转为简体中文（需 pip 安装 opencc-python-reimplemented）
+    whisper-simplified-zh: true
+    infer-timeout-seconds: 600
+    use-python-asr: true
+    # 首次运行需从 Hub 下载 Whisper 权重；国内直连 huggingface.co 易超时，可用镜像（海外可删本行或留空）
+    hf-endpoint: https://hf-mirror.com
+  # 视频：YOLO 抽帧检测 + 直方图场景变化；ASR 复用 faster-whisper（需 ffmpeg 提取音轨）
+  video:
+    script-path: scripts/video_analyze.py
+    # 视频抽帧专用 YOLO 置信度（略高于图片侧可减少胶片/纹理误检为笔记本、手机等）；不设或 -1 时沿用 multimodal.vision.yolo-confidence
+    yolo-confidence: 0.32
+    # 长视频 YOLO 采样点数上限（40–120），默认 80 略快；调高更细但更慢
+    yolo-max-samples: 80
+    # 视频 ASR（faster-whisper）beam，1 最快，2–5 更稳更慢
+    whisper-beam-size: 1
+    # 与 vision 共用 python-cmd / yolo 权重时可省略，此处仅覆盖超时与回退
+    infer-timeout-seconds: 900
+    # 为 false 时 Python 失败直接报错，便于排查环境
+    use-heuristic-fallback: true
+    # 省时间能力（摘要/书签/搜索/问答）见 VideoInsightController：
+    # POST /api/video/insights/summary | /search?q= | /ask?question=
+    # 前端默认 POST /api/video/bundle：一次上传完成 detect+keyframes+asr（避免三连 multipart）
+    # 画面语义描述（BLIP，可选）：不装依赖时 frames 为空，仍可用 YOLO+语音+DeepSeek
+    visual-caption-script-path: scripts/video_visual_captions.py
+    visual-caption-enabled: true
+    visual-caption-max-frames: 8
+    visual-caption-timeout-seconds: 420

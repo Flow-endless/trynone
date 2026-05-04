@@ -1,0 +1,14 @@
+# Python deps for image analysis and video_analyze.py (YOLO + OpenCV).
+# 视频语音字幕另需：系统安装 ffmpeg（PATH）；faster-whisper 见 requirements-audio.txt。
+# Install from project root:
+#   .venv\Scripts\python.exe -m pip install -r requirements-vision.txt
+#
+# OCR uses RapidOCR + ONNX by default (no PyTorch/Paddle required on Windows).
+# Optional PaddleOCR: pip install paddlepaddle paddleocr (large; needs enable_mkldnn=False)
+
+ultralytics>=8.0.0
+opencv-python-headless>=4.8.0
+numpy>=1.23.0
+rapidocr-onnxruntime>=1.3.0
+onnxruntime>=1.16.0
+zhconv>=1.4.2

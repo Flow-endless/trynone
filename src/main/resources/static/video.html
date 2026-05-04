@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>视频分析 · AI 多模态智能分析平台</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233b82f6'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-size='14' font-family='system-ui'%3EAI%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="./css/video-analysis.css" />
+    <link rel="stylesheet" href="./css/mm-cross-nav.css" />
+  </head>
+  <body class="vp-body">
+    <div id="app" class="vp-layout">
+      <aside class="vp-sidebar">
+        <div class="vp-brand">
+          <div class="vp-brand-icon"><i class="fa-solid fa-clapperboard"></i></div>
+          <div>
+            <h2>视频分析</h2>
+            <p>上传后一键分析</p>
+          </div>
+        </div>
+
+        <nav class="mm-cross-nav" aria-label="功能模块">
+          <span class="mm-cross-nav__title">模块切换</span>
+          <div class="mm-cross-nav__links">
+            <a href="./index.html" class="mm-cross-nav__link">首页</a>
+            <a href="./text.html" class="mm-cross-nav__link">文本</a>
+            <a href="./image.html" class="mm-cross-nav__link">图片</a>
+            <a href="./audio.html" class="mm-cross-nav__link">音频</a>
+            <a href="./video.html" class="mm-cross-nav__link" aria-current="page">视频</a>
+            <a href="./history.html" class="mm-cross-nav__link">历史</a>
+          </div>
+        </nav>
+
+        <div class="vp-section-title">上传并开始分析</div>
+        <label id="vp-dropzone" class="vp-dropzone">
+          <input id="vp-file-input" type="file" accept=".mp4,.mov,.avi,video/mp4,video/quicktime,video/x-msvideo" />
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <p>拖拽或点击上传视频</p>
+          <p class="vp-hint">支持 mp4 / mov / avi</p>
+        </label>
+        <button id="vp-btn-start-analyze" class="vp-btn vp-btn-primary vp-btn-start-analyze" type="button" disabled>
+          <i class="fa-solid fa-bolt"></i> 开始分析
+        </button>
+        <p class="vp-analyze-hint">选好文件后点「开始分析」；无需播完整个视频。右侧顶部也可点。</p>
+
+        <div class="vp-section-title">智能总结 · 按你的需求分析</div>
+        <p class="vp-insights-intro">上传视频，在下方写下你的问题或关注点，再点「生成总结与回答」。</p>
+        <textarea
+          id="vp-understand-instruction"
+          class="vp-insights-textarea"
+          rows="4"
+          placeholder="请先在此输入你的分析需求，再点按钮（例如：总结视频内容 / 画面上的人在做什么 / 语音要点）。仅填需求、未上传视频时按钮为灰。"
+        ></textarea>
+        <button id="vp-btn-understand" class="vp-btn vp-btn-primary" type="button">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> 生成总结与回答
+        </button>
+
+        <div class="vp-section-title">省时间 · 摘要 / 搜索 / 提问</div>
+        <p class="vp-insights-intro">生成摘要、按台词搜索定位，或输入问题后提问。</p>
+        <button id="vp-btn-insights-summary" class="vp-btn vp-btn-primary" type="button">
+          <i class="fa-solid fa-compress"></i> 生成摘要
+        </button>
+        <div class="vp-insights-field">
+          <input
+            type="search"
+            id="vp-insights-q"
+            class="vp-insights-input"
+            placeholder="搜索关键词，定位到秒…"
+            autocomplete="off"
+          />
+          <label class="vp-insights-check"
+            ><input type="checkbox" id="vp-insights-visual" /> 同时检索画面事件</label
+          >
+          <button id="vp-btn-insights-search" type="button" class="vp-btn vp-btn-ghost">
+            <i class="fa-solid fa-magnifying-glass"></i> 搜索定位
+          </button>
+        </div>
+        <textarea
+          id="vp-insights-question"
+          class="vp-insights-textarea"
+          rows="3"
+          placeholder="针对视频内容提问（如：老板对竞品价格的结论？）"
+        ></textarea>
+        <button id="vp-btn-insights-ask" type="button" class="vp-btn vp-btn-primary">
+          <i class="fa-solid fa-circle-question"></i> 提问
+        </button>
+
+        <div class="vp-section-title">分析与导出</div>
+        <div class="vp-actions">
+          <button id="vp-btn-report" class="vp-btn vp-btn-primary" type="button">
+            <i class="fa-solid fa-file-lines"></i> 生成分析报告
+          </button>
+          <button id="vp-btn-tts" class="vp-btn vp-btn-primary" type="button">
+            <i class="fa-solid fa-volume-high"></i> AI 语音解说
+          </button>
+          <button id="vp-btn-export-report" class="vp-btn vp-btn-ghost" type="button">
+            <i class="fa-solid fa-download"></i> 导出报告文本
+          </button>
+          <button id="vp-btn-export-frames" class="vp-btn vp-btn-ghost" type="button">
+            <i class="fa-solid fa-images"></i> 导出关键帧
+          </button>
+          <button id="vp-btn-clear" class="vp-btn vp-btn-ghost" type="button">
+            <i class="fa-solid fa-rotate-left"></i> 清空
+          </button>
+        </div>
+      </aside>
+
+      <main class="vp-main">
+        <header class="vp-header">
+          <h1>视频智能分析工作台</h1>
+          <div class="vp-header-actions">
+            <button
+              id="vp-btn-start-analyze-top"
+              type="button"
+              class="vp-btn vp-btn-primary vp-header-analyze-btn"
+              disabled
+            >
+              <i class="fa-solid fa-bolt"></i> 开始分析
+            </button>
+            <span id="vp-header-badge" class="vp-header-badge">等待上传</span>
+          </div>
+        </header>
+        <div id="vp-env-banner" class="vp-env-banner vp-hidden" role="status" aria-live="polite"></div>
+
+        <section class="vp-compare">
+          <article class="vp-panel">
+            <div class="vp-panel-head"><i class="fa-solid fa-video"></i> 原视频</div>
+            <div class="vp-video-wrap">
+              <video id="vp-video-raw" class="vp-video" controls preload="metadata"></video>
+              <div id="vp-live-caption" class="vp-live-caption" aria-live="polite"></div>
+            </div>
+          </article>
+
+          <article class="vp-panel">
+            <div class="vp-panel-head"><i class="fa-solid fa-robot"></i> AI 分析视频（YOLO 抽样帧检测框）</div>
+            <div id="vp-analysis-wrap" class="vp-video-wrap vp-analysis-wrap">
+              <video id="vp-video-ai" class="vp-video" muted preload="metadata"></video>
+              <canvas id="vp-overlay"></canvas>
+              <div id="vp-selection" class="vp-selection vp-hidden"></div>
+            </div>
+            <p id="vp-selection-result" class="vp-selection-result">
+              检测框仅在点击「开始分析」且服务器返回结果后显示；来自整段视频的抽样帧，与当前播放时刻可能不完全同步。
+            </p>
+          </article>
+        </section>
+
+        <section class="vp-timeline-panel">
+          <div class="vp-timeline-head">
+            <span><i class="fa-solid fa-timeline"></i> 关键帧时间轴</span>
+            <span id="vp-time-label">00:00 / 00:00</span>
+          </div>
+          <div id="vp-progress-track" class="vp-progress-track">
+            <div id="vp-progress-fill" class="vp-progress-fill"></div>
+            <div id="vp-markers" class="vp-markers"></div>
+          </div>
+          <div class="vp-marker-legend">
+            <span><i class="dot dot-person"></i> 人物出现</span>
+            <span><i class="dot dot-disappear"></i> 物体消失</span>
+            <span><i class="dot dot-cut"></i> 镜头切换</span>
+          </div>
+        </section>
+
+        <section class="vp-insights-section" aria-label="智能摘要与检索">
+          <div class="vp-insights-head">
+            <span><i class="fa-solid fa-wand-magic-sparkles"></i> 智能摘要 / 搜索 / 问答</span>
+          </div>
+          <div id="vp-insights-body" class="vp-insights-body">
+            <p class="vp-placeholder">上传视频后，在左侧使用「生成摘要」「搜索定位」「提问」查看结果。</p>
+          </div>
+        </section>
+
+        <section class="vp-bottom">
+          <article class="vp-panel vp-report-panel">
+            <div class="vp-panel-head"><i class="fa-solid fa-clipboard-list"></i> 多模态智能报告</div>
+            <div id="vp-report-body" class="vp-report-body">
+              <p class="vp-placeholder">上传并分析后在此查看摘要；点「生成分析报告」可更新。</p>
+            </div>
+          </article>
+
+          <article class="vp-panel vp-events-panel">
+            <div class="vp-panel-head"><i class="fa-solid fa-list-check"></i> 时间轴事件列表</div>
+            <div id="vp-events-list" class="vp-events-list"></div>
+          </article>
+        </section>
+
+        <article class="vp-panel vp-keyframes-panel">
+          <div class="vp-panel-head"><i class="fa-solid fa-images"></i> 关键帧缩略图</div>
+          <div id="vp-keyframes" class="vp-keyframes"></div>
+        </article>
+
+        <article class="vp-panel vp-subtitles-panel">
+          <div class="vp-panel-head vp-subtitles-head-row">
+            <span><i class="fa-solid fa-closed-captioning"></i> 语音字幕全文（先「开始分析」；完成后随播放高亮）</span>
+            <span id="vp-subtitles-meta" class="vp-subtitles-meta"></span>
+          </div>
+          <div class="vp-subtitle-toolbar">
+            <input
+              type="search"
+              id="vp-sub-search"
+              class="vp-sub-search"
+              placeholder="按台词或时间筛选，例如：细胞 或 17:"
+              autocomplete="off"
+            />
+            <button id="vp-sub-scroll-active" type="button" class="vp-btn vp-btn-ghost vp-sub-jump-btn">
+              <i class="fa-solid fa-crosshairs"></i> 定位当前句
+            </button>
+          </div>
+          <div id="vp-subtitles" class="vp-subtitles vp-subtitles-body"></div>
+        </article>
+      </main>
+    </div>
+    <script src="./js/mm-api-base.js"></script>
+    <script src="./js/mm-history.js"></script>
+    <script src="./js/video-analysis.js"></script>
+  </body>
+</html>

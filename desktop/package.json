@@ -1,0 +1,49 @@
+{
+  "name": "deepseek-multimodal-desktop",
+  "version": "0.1.0",
+  "description": "Electron 壳：加载本机 Spring Boot 多模态页面",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "predist": "node ../scripts/check-jar-for-electron.js",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.huyingxxi.deepseek.multimodal",
+    "productName": "Deepseek多模态",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "offline.html"
+    ],
+    "extraResources": [
+      {
+        "from": "../target/deepseek-0.0.1-SNAPSHOT.jar",
+        "to": "backend/deepseek-0.0.1-SNAPSHOT.jar"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Deepseek多模态"
+    }
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3"
+  }
+}

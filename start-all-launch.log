@@ -1,0 +1,13 @@
+---- 2026/4/23 9:42:42 ----
+dir=D:\IDEAfiles\deepseek
+
+=== [2026/04/23 ÷‹Àƒ  9:42:43.56] start-all _HIDDEN ===
+[step] java ok
+[step] mvn ok
+[step] mvn clean package ok
+[step] jar exists
+[step] port 8081 spawn java hidden
+[step] backend http ok
+[step] desktop dir
+[step] node ok
+[step] npm start (Electron), SKIP_EMBEDDED_JAVA=

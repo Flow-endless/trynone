@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>无法连接后端</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 24px;
+      }
+      .box {
+        max-width: 520px;
+        line-height: 1.6;
+      }
+      h1 {
+        font-size: 1.25rem;
+        margin-bottom: 12px;
+      }
+      code {
+        background: #1e293b;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 0.9em;
+      }
+      p {
+        color: #94a3b8;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <h1>未连接到本机后端</h1>
+      <p>
+        请先在本机启动 Spring Boot（例如在 IDEA 中运行 <code>DeepseekApplication</code>），确认浏览器能打开
+        <code>http://127.0.0.1:8081</code> 后，再关闭本窗口并重新打开桌面端。
+      </p>
+      <p>
+        若后端端口不是 8081，可在启动桌面端前设置环境变量：<code>APP_PORT=你的端口</code>（Windows 可用「使用说明」里的
+        <code>start-desktop.bat</code>）。
+      </p>
+    </div>
+  </body>
+</html>

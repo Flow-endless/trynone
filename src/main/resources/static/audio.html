@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>音频处理 · AI 多模态智能分析平台</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233b82f6'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-size='14' font-family='system-ui'%3EAI%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="./css/audio-processing.css" />
+    <link rel="stylesheet" href="./css/mm-cross-nav.css" />
+  </head>
+  <body class="ap-body">
+    <div id="app" class="ap-layout">
+      <aside class="ap-sidebar">
+        <div class="ap-brand">
+          <div class="ap-brand-icon"><i class="fa-solid fa-wave-square"></i></div>
+          <div>
+            <h2>音频处理</h2>
+            <p>上传 · 语音识别 · 翻译 · 总结</p>
+          </div>
+        </div>
+
+        <nav class="mm-cross-nav" aria-label="功能模块">
+          <span class="mm-cross-nav__title">模块切换</span>
+          <div class="mm-cross-nav__links">
+            <a href="./index.html" class="mm-cross-nav__link">首页</a>
+            <a href="./text.html" class="mm-cross-nav__link">文本</a>
+            <a href="./image.html" class="mm-cross-nav__link">图片</a>
+            <a href="./audio.html" class="mm-cross-nav__link" aria-current="page">音频</a>
+            <a href="./video.html" class="mm-cross-nav__link">视频</a>
+            <a href="./history.html" class="mm-cross-nav__link">历史</a>
+          </div>
+        </nav>
+
+        <div class="ap-section-title">上传音频文件</div>
+        <label id="ap-dropzone" class="ap-dropzone">
+          <input id="ap-file-input" type="file" accept=".mp3,.wav,.m4a,.webm,audio/mpeg,audio/wav,audio/x-wav,audio/mp4,audio/m4a,audio/webm" />
+          <i class="fa-solid fa-file-audio"></i>
+          <p>拖拽或点击上传音频</p>
+          <p class="ap-hint">支持 mp3 / wav / m4a</p>
+        </label>
+
+        <div id="ap-audio-player-wrap" class="ap-audio-player-wrap">
+          <audio id="ap-audio-player" controls preload="metadata"></audio>
+        </div>
+
+        <div class="ap-section-title">麦克风录音识别</div>
+        <p class="ap-hint" style="margin: 0 0 10px; font-size: 12px; color: #64748b; line-height: 1.5">
+          点击开始录音，说完后点「停止并识别」上传至后端（不依赖谷歌在线语音）。请使用 Chrome / Edge，并用 <code style="font-size: 11px">http://localhost:端口</code> 或 HTTPS 打开页面以允许麦克风。
+        </p>
+        <div class="ap-mic-row">
+          <button id="ap-btn-mic" type="button" class="ap-btn ap-btn-mic">
+            <i class="fa-solid fa-microphone"></i>
+            <span>开始录音</span>
+          </button>
+          <select id="ap-lang-select" class="ap-select" aria-label="识别语言">
+            <option value="zh-CN">中文</option>
+            <option value="en-US">English</option>
+            <option value="ja-JP">日本語</option>
+            <option value="ko-KR">한국어</option>
+            <option value="fr-FR">Français</option>
+          </select>
+        </div>
+        <p id="ap-mic-status" class="ap-mic-status">麦克风待命</p>
+        <div id="ap-mic-meter-wrap" class="ap-mic-meter-wrap">
+          <div class="ap-mic-meter-label">输入电平</div>
+          <canvas id="ap-mic-canvas" width="280" height="56" class="ap-mic-canvas" role="img" aria-label="麦克风输入音量条"></canvas>
+          <p class="ap-mic-meter-hint">
+            录音时条应随说话明显起伏（已按人声优化）。仍几乎不动：提高系统麦克风音量、换耳麦、或改用「上传音频」试 mp3/wav。
+          </p>
+        </div>
+
+        <div class="ap-actions">
+          <button id="ap-btn-transcribe" type="button" class="ap-btn ap-btn-primary">
+            <i class="fa-solid fa-headphones"></i> 音频转写
+          </button>
+          <button id="ap-btn-translate" type="button" class="ap-btn ap-btn-primary">
+            <i class="fa-solid fa-language"></i> 翻译为中文
+          </button>
+          <button id="ap-btn-summary" type="button" class="ap-btn ap-btn-primary">
+            <i class="fa-solid fa-list-check"></i> 生成智能总结
+          </button>
+          <button id="ap-btn-clear" type="button" class="ap-btn ap-btn-ghost">
+            <i class="fa-solid fa-rotate-left"></i> 清空
+          </button>
+        </div>
+      </aside>
+
+      <main class="ap-main">
+        <header class="ap-header">
+          <h1>音频智能处理工作台</h1>
+          <span id="ap-header-badge" class="ap-header-badge">就绪</span>
+        </header>
+
+        <section class="ap-content">
+          <article class="ap-panel">
+            <div class="ap-panel-head"><i class="fa-solid fa-file-lines"></i> 识别原文</div>
+            <div class="ap-panel-body">
+              <div id="ap-original-loading" class="ap-loading ap-hidden">
+                <div class="ap-spinner"></div>
+                <span>正在识别原文...</span>
+              </div>
+              <pre id="ap-original-text" class="ap-text-output">识别原文将在此显示（支持麦克风实时输入或文件转写）。</pre>
+            </div>
+          </article>
+
+          <article class="ap-panel">
+            <div class="ap-panel-head"><i class="fa-solid fa-language"></i> 翻译结果（中文）</div>
+            <div class="ap-panel-body">
+              <div id="ap-translate-loading" class="ap-loading ap-hidden">
+                <div class="ap-spinner"></div>
+                <span>正在翻译...</span>
+              </div>
+              <pre id="ap-translate-text" class="ap-text-output">翻译结果将在此显示。</pre>
+            </div>
+          </article>
+
+          <article class="ap-panel ap-panel--summary">
+            <div class="ap-panel-head">
+              <div class="ap-panel-head-row">
+                <span><i class="fa-solid fa-lightbulb"></i> 智能总结</span>
+              </div>
+              <div class="ap-summary-toolbar">
+                <label class="ap-summary-toolbar-label" for="ap-summary-mode">总结对象</label>
+                <select id="ap-summary-mode" class="ap-summary-select" title="选择要参与总结的文本来源">
+                  <option value="auto">自动：有「译文」则用译文，否则用「识别原文」</option>
+                  <option value="translation">仅依据：翻译结果（中文）</option>
+                  <option value="original">仅依据：识别原文</option>
+                </select>
+              </div>
+              <p id="ap-summary-hint" class="ap-summary-hint">生成前请确认左侧选项；总结仅基于所选来源，不包含未选中的栏。</p>
+            </div>
+            <div class="ap-panel-body">
+              <div id="ap-summary-loading" class="ap-loading ap-hidden">
+                <div class="ap-spinner"></div>
+                <span>正在生成总结...</span>
+              </div>
+              <pre id="ap-summary-text" class="ap-text-output">选择「总结对象」后点击「生成智能总结」，结果将在此展示。</pre>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="./js/mm-api-base.js"></script>
+    <script src="./js/mm-history.js"></script>
+    <script src="./js/audio-processing.js"></script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+【桌面端（Electron）使用说明】
+
+〇、一键启动（推荐，无黑色 CMD 窗口）
+
+  任选其一：
+  - 项目根目录双击 start-all.bat（会先调用 start-all.vbs，全程无可见控制台；个别系统上 CMD 可能极短闪现）
+  - 或直接双击 start-all.vbs（效果相同，通常无任何 CMD 闪现）
+
+  行为说明：
+  - 若无 target\deepseek-0.0.1-SNAPSHOT.jar，会先执行 mvn package
+  - 仅启动 Electron；Spring Boot 由 Electron 在后台无窗口启动（java -jar）
+
+  需已安装：JDK（java 在 PATH 或配置 JAVA_HOME）、Maven（mvn 在 PATH，仅首次打包时需要）、Node.js。
+
+  停止：关闭 Electron 窗口；若后端由本应用启动，会一并结束 Java 进程。
+
+  仅开桌面壳（不跑根目录一键脚本）时：可双击 desktop\start-desktop.bat 或 desktop\start-desktop.vbs。
+
+一、原理
+
+  桌面端加载本机 Spring Boot 页面（http://127.0.0.1:8081/index.html 等）。
+  后端既可由 Electron 子进程启动，也可由你先在 IDEA 里运行；若 8081 已有服务，Electron 会直接连现有后端。
+
+二、打包为 Windows 安装包（.exe 安装向导）
+
+  1. 项目根目录执行：mvn package -DskipTests（生成 target\deepseek-0.0.1-SNAPSHOT.jar）
+  2. 进入 desktop 目录执行：npm run dist
+  3. 安装包位于 desktop\dist-electron\（NSIS 安装程序）
+
+  说明：安装后的应用仍依赖本机已安装的 JRE/JDK（未内置 Java）。若需完全免装 Java，需另行集成 JRE（体积较大）。
+
+三、第一次使用（仅桌面、不一键时）
+
+  1. 安装 Node.js（LTS 即可）：https://nodejs.org/
+  2. 双击 desktop\start-desktop.vbs，或在 desktop 目录执行 npm install 后再 npm start
+
+四、端口不是 8081 时
+
+  - 修改 application.yml 里的 server.port 后，请同步修改 start-all.bat、start-desktop.bat 里的 APP_PORT，
+    或在命令行：
+      set APP_PORT=8061
+      set APP_URL=http://127.0.0.1:8061/index.html
+      npm start
+
+五、后续开发
+
+  你继续在仓库里改 Spring / static 页面即可；桌面端无需改代码，重启后端后窗口里刷新（Ctrl+R）即可看到更新。
+
+六、Electron 下载较慢时（可选）
+
+  安装 npm 依赖前可设置镜像（见 desktop\.npmrc 内注释）。

@@ -1,0 +1,6 @@
+ultralytics>=8.2.0
+# 使用 3.x 官方包；请在脚本中关闭 Doc 预处理以减轻首次下载（见 vision_infer.run_ocr）
+paddleocr>=3.0.0,<4.0
+paddlepaddle>=2.6.0
+opencv-python>=4.8.0
+numpy>=1.24.0

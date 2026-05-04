@@ -1,0 +1,13 @@
+.git
+.idea
+**/node_modules
+**/.venv
+desktop
+frontend
+**/target/**/*.jar
+**/target/classes
+**/target/generated-sources
+**/target/maven-status
+**/target/maven-archiver
+**/target/surefire-reports
+**/target/test-classes

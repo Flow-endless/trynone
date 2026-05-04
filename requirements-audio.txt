@@ -1,0 +1,7 @@
+# 音频转写（与 vision 共用同一 venv 即可）
+#   .venv\Scripts\python.exe -m pip install -r requirements-audio.txt
+#
+# faster-whisper：本地 Whisper，支持 mp3/wav/m4a/webm（部分格式需系统安装 ffmpeg）
+faster-whisper>=1.0.3
+# Whisper 中文常输出繁体，转写后繁转简（与 zh-CN 一致）
+opencc-python-reimplemented>=0.1.7

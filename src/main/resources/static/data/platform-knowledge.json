@@ -1,0 +1,48 @@
+{
+  "updatedAt": "2026-04-17",
+  "sourceNote": "平台内置示例资料，可自行替换为业务文档链接与摘要。",
+  "items": [
+    {
+      "id": "overview",
+      "category": "平台说明",
+      "title": "多模态智能分析平台总览",
+      "summary": "统一提供文本、图片、音频、视频四类能力的入口与路由；各模态分析接口可在后续步骤独立接入。",
+      "url": "https://example.com/docs/overview"
+    },
+    {
+      "id": "text-api",
+      "category": "文本",
+      "title": "文本对话与任务接口约定",
+      "summary": "支持对话、总结、翻译、润色、代码生成等；建议按任务类型拆分路由并做流式输出。",
+      "url": "https://example.com/docs/text"
+    },
+    {
+      "id": "vision-api",
+      "category": "视觉",
+      "title": "图片分析能力说明",
+      "summary": "可对接 OCR、图像描述、图表理解等；上传需限制格式与大小并做安全扫描。",
+      "url": "https://example.com/docs/vision"
+    },
+    {
+      "id": "audio-api",
+      "category": "音频",
+      "title": "音频处理与转写",
+      "summary": "支持语音转写、说话人分离、摘要与纪要生成；长音频建议分片上传。",
+      "url": "https://example.com/docs/audio"
+    },
+    {
+      "id": "video-api",
+      "category": "视频",
+      "title": "视频分析与镜头摘要",
+      "summary": "可结合关键帧提取、字幕与音轨进行摘要与问答；注意版权与存储策略。",
+      "url": "https://example.com/docs/video"
+    },
+    {
+      "id": "security",
+      "category": "合规",
+      "title": "数据与安全建议",
+      "summary": "敏感内容过滤、审计日志、密钥与模型调用配额管理，请在生产环境单独配置。",
+      "url": "https://example.com/docs/security"
+    }
+  ]
+}

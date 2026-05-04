@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>历史记录 · AI 多模态智能分析平台</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23334155'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-size='14' font-family='system-ui'%3EAI%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="./css/history.css" />
+    <link rel="stylesheet" href="./css/mm-cross-nav.css" />
+  </head>
+  <body class="hh-body">
+    <div class="hh-layout">
+      <header class="hh-header">
+        <div>
+          <h1><i class="fa-solid fa-clock-rotate-left"></i> 多模态历史记录</h1>
+          <p class="hh-sub">
+            数据保存在本机浏览器（localStorage），换电脑或清除站点数据后不可见。可按关键字、时间、模块筛选；超出保留天数或条数上限的旧记录会自动删除。列表中「打开页面」可跳回对应功能；文本 / 图片 / 音频在关闭标签前会尽量恢复。视频页在本机会把原文件缓存在浏览器 IndexedDB（长视频也尽量保留），在模块间来回切换时一般可恢复同一文件与界面；仅当缓存被清理或取回失败时才需重新选文件。
+          </p>
+          <nav class="mm-cross-nav hh-cross-nav" aria-label="功能模块">
+            <span class="mm-cross-nav__title">模块切换</span>
+            <div class="mm-cross-nav__links">
+              <a href="./index.html" class="mm-cross-nav__link">首页</a>
+              <a href="./text.html" class="mm-cross-nav__link">文本</a>
+              <a href="./image.html" class="mm-cross-nav__link">图片</a>
+              <a href="./audio.html" class="mm-cross-nav__link">音频</a>
+              <a href="./video.html" class="mm-cross-nav__link">视频</a>
+              <a href="./history.html" class="mm-cross-nav__link" aria-current="page">历史</a>
+            </div>
+          </nav>
+        </div>
+        <a class="hh-back" href="./index.html"><i class="fa-solid fa-house"></i> 返回首页</a>
+      </header>
+
+      <section class="hh-filters" aria-label="筛选">
+        <label>
+          关键字
+          <input type="search" id="hh-q" class="hh-input" placeholder="标题、摘要、正文内容…" autocomplete="off" />
+        </label>
+        <label>
+          模块
+          <select id="hh-module" class="hh-select">
+            <option value="all">全部</option>
+            <option value="text">文本对话</option>
+            <option value="image">图片分析</option>
+            <option value="audio">音频处理</option>
+            <option value="video">视频分析</option>
+          </select>
+        </label>
+        <label>
+          开始日期
+          <input type="date" id="hh-from" class="hh-input" />
+        </label>
+        <label>
+          结束日期
+          <input type="date" id="hh-to" class="hh-input" />
+        </label>
+        <div class="hh-filter-actions" style="grid-column: 1 / -1">
+          <button type="button" class="hh-btn hh-btn-primary" id="hh-btn-search"><i class="fa-solid fa-magnifying-glass"></i> 筛选</button>
+          <button type="button" class="hh-btn hh-btn-ghost" id="hh-btn-reset"><i class="fa-solid fa-rotate-left"></i> 重置</button>
+        </div>
+      </section>
+
+      <section class="hh-settings" aria-label="存储策略">
+        <h2>存储与自动清理</h2>
+        <div class="hh-settings-grid">
+          <label>
+            保留天数（过期自动删）
+            <input type="number" id="hh-retention" class="hh-input" min="1" max="3650" />
+          </label>
+          <label>
+            最大条数（超出删最旧）
+            <input type="number" id="hh-max" class="hh-input" min="10" max="10000" />
+          </label>
+          <label>
+            &nbsp;
+            <button type="button" class="hh-btn hh-btn-primary" id="hh-btn-save-settings">
+              <i class="fa-solid fa-floppy-disk"></i> 保存设置
+            </button>
+          </label>
+          <label>
+            &nbsp;
+            <button type="button" class="hh-btn hh-btn-ghost" id="hh-btn-purge"><i class="fa-solid fa-broom"></i> 立即按规则清理</button>
+          </label>
+        </div>
+        <p class="hh-hint">保存设置后会立即按新规则裁剪已有记录。单条删除或批量清空仅影响本地历史，不影响已上传到服务端的内容。</p>
+      </section>
+
+      <div class="hh-toolbar">
+        <button type="button" class="hh-btn hh-btn-ghost" id="hh-btn-export"><i class="fa-solid fa-download"></i> 导出 JSON</button>
+        <button type="button" class="hh-btn hh-btn-danger" id="hh-btn-clear-all"><i class="fa-solid fa-trash-can"></i> 清空全部历史</button>
+      </div>
+
+      <section id="hh-list" class="hh-list" aria-live="polite"></section>
+    </div>
+
+    <div id="hh-overlay" class="hh-overlay" aria-hidden="true">
+      <div class="hh-modal" role="dialog" aria-modal="true" aria-labelledby="hh-modal-title">
+        <div class="hh-modal-head">
+          <h3 id="hh-modal-title">记录详情</h3>
+          <button type="button" class="hh-btn hh-btn-ghost" id="hh-btn-close-modal" aria-label="关闭"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="hh-modal-body">
+          <pre id="hh-detail-pre"></pre>
+        </div>
+        <div class="hh-modal-foot">
+          <button type="button" class="hh-btn hh-btn-primary" id="hh-btn-resume">
+            <i class="fa-solid fa-up-right-from-square"></i> 打开功能页（恢复此记录）
+          </button>
+          <button type="button" class="hh-btn hh-btn-ghost" id="hh-btn-copy"><i class="fa-regular fa-copy"></i> 复制 JSON</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/mm-history.js"></script>
+    <script src="./js/history-page.js"></script>
+  </body>
+</html>

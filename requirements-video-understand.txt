@@ -1,0 +1,15 @@
+# 可选：为「视频画面语义总结」提供 BLIP 图像描述（英文），供 DeepSeek 综合成中文。
+# 体积较大（含 PyTorch CPU 版）。仅需在需要「吃饭/行为级」画面理解时安装：
+#
+#   .venv\Scripts\python.exe -m pip install -r requirements-video-understand.txt
+#
+# 不安装时：仍可用 YOLO 事件 + 语音转写 + DeepSeek 做总结，但纯画面细粒度行为会弱一些。
+#
+# Windows CPU 版 PyTorch（若已装 torch 可跳过该行）：
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+torch
+torchvision
+transformers>=4.36.0
+Pillow>=9.0.0
+safetensors>=0.4.0

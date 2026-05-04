@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 多模态智能分析平台</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230066cc'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-size='14' font-family='system-ui'%3EAI%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./css/app.css" />
+  </head>
+  <body class="mm-body">
+    <div class="mm-home">
+      <header class="mm-home-header">
+        <div class="mm-home-brand">
+          <div class="mm-home-logo" aria-hidden="true">◇</div>
+          <div>
+            <h1 class="mm-home-title">AI 多模态智能分析平台</h1>
+            <p class="mm-home-sub">文本 · 图片 · 音频 · 视频 — 统一入口</p>
+          </div>
+        </div>
+        <p class="mm-home-tagline">文本理解 · 视觉分析 · 语音与视频智能处理</p>
+      </header>
+
+      <main class="mm-grid" role="navigation" aria-label="多模态功能入口">
+        <a class="mm-card mm-card--history" href="./history.html">
+          <span class="mm-card-icon" aria-hidden="true">📜</span>
+          <div class="mm-card-body">
+            <h2>历史记录</h2>
+            <p>按时间、关键字检索各模块操作记录；支持保留策略与导出。</p>
+          </div>
+          <span class="mm-card-arrow">进入 →</span>
+        </a>
+
+        <a class="mm-card mm-card--text" href="./text.html">
+          <span class="mm-card-icon" aria-hidden="true">💬</span>
+          <div class="mm-card-body">
+            <h2>文本对话</h2>
+            <p>智能问答、总结、翻译、润色与代码生成等文本能力。</p>
+          </div>
+          <span class="mm-card-arrow">进入 →</span>
+        </a>
+
+        <a class="mm-card mm-card--image" href="./image.html">
+          <span class="mm-card-icon" aria-hidden="true">🖼</span>
+          <div class="mm-card-body">
+            <h2>图片分析</h2>
+            <p>图像理解、OCR、场景与图表解读（后续步骤对接模型）。</p>
+          </div>
+          <span class="mm-card-arrow">进入 →</span>
+        </a>
+
+        <a class="mm-card mm-card--audio" href="./audio.html">
+          <span class="mm-card-icon" aria-hidden="true">🎧</span>
+          <div class="mm-card-body">
+            <h2>音频处理</h2>
+            <p>语音转写、摘要、纪要（后续步骤对接接口）。</p>
+          </div>
+          <span class="mm-card-arrow">进入 →</span>
+        </a>
+
+        <a class="mm-card mm-card--video" href="./video.html">
+          <span class="mm-card-icon" aria-hidden="true">🎬</span>
+          <div class="mm-card-body">
+            <h2>视频分析</h2>
+            <p>镜头摘要、关键帧与讲解（后续步骤对接接口）。</p>
+          </div>
+          <span class="mm-card-arrow">进入 →</span>
+        </a>
+      </main>
+
+      <footer class="mm-home-footer">
+        <span>路由说明见 <code>./js/multimodal-routes.js</code></span>
+      </footer>
+    </div>
+    <script type="module" src="./js/multimodal-routes.js"></script>
+  </body>
+</html>
