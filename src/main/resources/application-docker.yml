@@ -8,6 +8,8 @@ multimodal:
     python-cmd: python3
   audio:
     python-cmd: python3
+    # Railway 服务器在海外，hf-mirror.com（国内镜像）不可达；清空后直接使用 huggingface.co
+    hf-endpoint: ""
   video:
     # 镜像内不按装 torch/transformers 时关掉 BLIP，避免启动或调用报错
     visual-caption-enabled: false

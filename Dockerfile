@@ -20,6 +20,8 @@ COPY scripts ./scripts
 RUN pip3 install --no-cache-dir \
     -r requirements-audio.txt \
     -r requirements-vision.txt
+# Pre-download Whisper tiny model so runtime requests don't need network access
+RUN python3 -c "from faster_whisper import WhisperModel; WhisperModel('tiny', device='cpu', compute_type='int8')"
 
 COPY --from=build /src/target/*.jar /app/app.jar
 
