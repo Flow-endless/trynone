@@ -76,6 +76,10 @@ public class VisionController {
     @Value("${multimodal.vision.yolo-world-extra-classes:}")
     private String yoloWorldExtraClasses;
 
+    /** 国内可设为 https://hf-mirror.com；海外留空，Python 侧直连 huggingface.co */
+    @Value("${multimodal.vision.hf-endpoint:}")
+    private String hfEndpoint;
+
     @PostMapping(value = "/yolo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Map<String, Object> yolo(@RequestParam("file") MultipartFile file,
                                     @RequestParam(value = "mode", required = false) String mode) throws IOException {
@@ -313,7 +317,9 @@ public class VisionController {
         env.put("YOLO_DOWNLOAD_TIMEOUT_S", String.valueOf(Math.max(60, yoloDownloadTimeoutSeconds)));
         env.put("ULTRALYTICS_ASSETS_TAG", yoloAssetsTag);
         env.put("PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True");
-        env.put("HF_ENDPOINT", "https://hf-mirror.com");
+        if (StringUtils.hasText(hfEndpoint)) {
+            env.put("HF_ENDPOINT", hfEndpoint.trim());
+        }
         env.put("FLAGS_use_mkldnn", "0");
         env.put("FLAGS_enable_pir_api", "0");
         env.put("KMP_DUPLICATE_LIB_OK", "TRUE");

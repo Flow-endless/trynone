@@ -54,6 +54,8 @@ multimodal:
     ocr-backend: rapid
     # YOLO 置信度阈值（0~1），略低可提高召回；过小会产生更多误检
     yolo-confidence: 0.18
+    # 首次运行需从 Hub 下载 OCR 模型权重；国内直连 huggingface.co 易超时，可用镜像（海外可留空）
+    hf-endpoint: https://hf-mirror.com
     # 含首次下载权重，建议给足时间
     infer-timeout-seconds: 600
     # 关闭后：必须走真实模型；开启后：模型异常会回退到启发式结果

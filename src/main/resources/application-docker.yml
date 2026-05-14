@@ -6,6 +6,8 @@ server:
 multimodal:
   vision:
     python-cmd: python3
+    # Railway 服务器在海外，hf-mirror.com（国内镜像）不可达；清空后直接使用 huggingface.co
+    hf-endpoint: ""
   audio:
     python-cmd: python3
     # Railway 服务器在海外，hf-mirror.com（国内镜像）不可达；清空后直接使用 huggingface.co

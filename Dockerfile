@@ -22,6 +22,8 @@ RUN pip3 install --no-cache-dir \
     -r requirements-vision.txt
 # Pre-download Whisper tiny model so runtime requests don't need network access
 RUN python3 -c "from faster_whisper import WhisperModel; WhisperModel('tiny', device='cpu', compute_type='int8')"
+# Pre-download YOLO yolov8n.pt weights into image cache (avoids GitHub download on first request)
+RUN python3 -c "import sys; sys.path.insert(0,'scripts'); from yolo_weights import resolve_yolo_weights; resolve_yolo_weights('yolov8n.pt')"
 
 COPY --from=build /src/target/*.jar /app/app.jar
 

@@ -6,15 +6,22 @@
 - task=ocr  -> 默认 RapidOCR+ONNX（无 PyTorch）；可选 PaddleOCR（见 --ocr-backend）
 输出 JSON 到 stdout，错误输出到 stderr 并返回非0状态码
 """
+import sys as _sys
+
+# Redirect stdout → stderr immediately so that ultralytics / other libraries
+# that print info/progress to stdout do not contaminate the JSON response.
+# _json_out is restored only for the final json.dumps write at the end of main().
+_json_out = _sys.stdout
+_sys.stdout = _sys.stderr
+
 import argparse
 import json
 import os
-import sys
 from pathlib import Path
 
-# PaddleOCR 3.x：配合 HF 镜像；Windows 需关闭 MKLDNN/PIR（见下方 FLAGS_*）
+# PaddleOCR 3.x：Windows 需关闭 MKLDNN/PIR（见下方 FLAGS_*）
+# HF_ENDPOINT 由 Java 层按 application.yml 注入；不在此处强制设置，避免覆盖海外部署配置
 os.environ.setdefault("PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True")
-os.environ.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
 
 # Windows / CPU：仅设环境变量往往不够，PaddleX 仍可能选 run_mode=mkldnn。
 # 必须在 import paddle 之前强制覆盖（勿用 setdefault，避免继承到错误值）。
@@ -549,7 +556,7 @@ def main():
         out = run_ocr(image_path, args.lang, args.ocr_backend)
         out = apply_ocr_enrichment(out)
 
-    sys.stdout.write(json.dumps(out, ensure_ascii=False))
+    _json_out.write(json.dumps(out, ensure_ascii=False))
 
 
 if __name__ == "__main__":
